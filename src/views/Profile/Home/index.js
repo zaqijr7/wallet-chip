@@ -24,6 +24,7 @@ function Profile() {
   const user = useSelector(state => state.user.userDetail)
   const dispatch = useDispatch()
   const [isRefresh, setIsRefresh] = useState(false)
+  const [error, setError] = useState(null)
 
   const formik = useFormik({
     initialValues: {
@@ -51,6 +52,9 @@ function Profile() {
       .then(() => {
         setIsRefresh(currentState => !currentState)
       })
+      .catch(err => {
+        setError(err.response.data.message)
+      })
   }
 
   const logoutHandler = (e) => {
@@ -73,8 +77,8 @@ function Profile() {
             <img src={user.picture} alt="profile"/>
             <form id="form-image" className="mt-2 d-flex flex-column">
               {
-                (formik.errors.picture && formik.touched.picture) ? (
-                  <small className="text-danger">{formik.errors.picture}</small>
+                (error) ? (
+                  <small className="text-danger">{error}</small>
                 ) : ''
               }
               <label style={{ cursor: 'pointer', color: '#7A7886' }} htmlFor="picture">
